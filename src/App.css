@@ -1,0 +1,80 @@
+body {
+  margin: 0;
+  background: #0b0f17;
+  color: #e6e6e6;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.container {
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.subtitle {
+  color: #9aa4b2;
+  margin-bottom: 24px;
+}
+
+/* 卡片 */
+.card {
+  background: #141a2a;
+  border: 1px solid #232b3d;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+}
+
+/* 按鈕 */
+button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  background: #3b82f6;
+  color: white;
+  transition: 0.2s;
+}
+
+button:hover {
+  background: #2563eb;
+}
+
+/* 次要按鈕 */
+button.secondary {
+  background: #2a3347;
+}
+
+button.secondary:hover {
+  background: #39445f;
+}
+
+/* log 區 */
+.log {
+  font-size: 12px;
+  color: #9aa4b2;
+  white-space: pre-wrap;
+  background: #0f1422;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid #232b3d;
+}
+
+/* QR 區 */
+.qrBox {
+  display: flex;
+  justify-content: center;
+  padding: 16px;
+  background: white;
+  border-radius: 12px;
+}
