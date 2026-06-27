@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Main from "./main";
+import Transfer from "./Transfer";
 import "./App.css";
 
 type Mode = "idle" | "send" | "receive";
@@ -9,26 +9,26 @@ function App() {
 
   return (
     <div className="container">
-      <div className="title">FileFloat</div>
+      <div className="title">FileFly</div>
       <div className="subtitle">Fast local file transfer</div>
 
       {mode === "idle" && (
         <div className="card">
           <button onClick={() => setMode("send")}>
-            ðŸ“¤ Send File
+            ?“¤ Send File
           </button>
 
           <button
             className="secondary"
             onClick={() => setMode("receive")}
           >
-            ðŸ“¥ Receive File
+            ?“¥ Receive File
           </button>
         </div>
       )}
 
       {mode !== "idle" && (
-        <Main mode={mode} onExit={() => setMode("idle")} />
+        <Transfer mode={mode} onExit={() => setMode("idle")} />
       )}
     </div>
   );

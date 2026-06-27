@@ -1,5 +1,5 @@
-📄 README.md（純文字版）
-FileFloat
+README.md
+FileFly
 
 Fast peer-to-peer file transfer using QR code + WebRTC.
 
@@ -13,7 +13,7 @@ Mobile-friendly web app
 Works in browser (no installation required)
 Concept
 
-FileFloat uses QR codes to exchange connection data between devices.
+FileFly uses QR codes to exchange connection data between devices.
 
 Flow:
 
@@ -30,8 +30,8 @@ qrcode.react
 html5-qrcode
 Installation
 
-git clone https://github.com/yourname/filefloat.git
-cd filefloat
+git clone https://github.com/yourname/FileFly.git
+cd FileFly
 npm install
 npm run dev
 

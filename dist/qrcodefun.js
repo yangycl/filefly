@@ -16,7 +16,7 @@ export function Scanner() {
             console.log("scan:", decodedText);
             //ex: room id
         }, (error) => {
-            // æŽƒæå¤±æ•—æœƒä¸€ç›´å›žå ±ï¼Œé€šå¸¸ä¸ç”¨è™•ç†
+            // ?ƒæ?å¤±æ??ƒä??´å??±ï??šå¸¸ä¸ç”¨?•ç?
         });
         return () => {
             scanner.clear();

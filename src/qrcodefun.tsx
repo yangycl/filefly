@@ -26,7 +26,7 @@ export function Scanner(): Promise<string> {
           qrbox: 250,
         },
         (decodedText) => {
-          // æˆåŠŸæŽƒåˆ°
+          // ?å??ƒåˆ°
           scanner?.stop().then(() => {
             scanner?.clear();
           });
