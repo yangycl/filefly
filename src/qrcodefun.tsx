@@ -26,7 +26,7 @@ export function Scanner(): Promise<string> {
           qrbox: 250,
         },
         (decodedText) => {
-          // ?å??ƒåˆ°
+
           scanner?.stop().then(() => {
             scanner?.clear();
           });
@@ -34,7 +34,7 @@ export function Scanner(): Promise<string> {
           resolve(decodedText);
         },
         (error) => {
-          // ignore scan errors
+
         }
       )
       .catch((err) => {

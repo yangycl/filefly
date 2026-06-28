@@ -22,7 +22,7 @@ body {
   margin-bottom: 24px;
 }
 
-/* ?¡ç? */
+
 .card {
   background: #141a2a;
   border: 1px solid #232b3d;
@@ -32,7 +32,7 @@ body {
   box-shadow: 0 10px 30px rgba(0,0,0,0.25);
 }
 
-/* ?‰é? */
+
 button {
   width: 100%;
   padding: 12px;
@@ -50,7 +50,7 @@ button:hover {
   background: #2563eb;
 }
 
-/* æ¬¡è??‰é? */
+
 button.secondary {
   background: #2a3347;
 }
@@ -59,7 +59,7 @@ button.secondary:hover {
   background: #39445f;
 }
 
-/* log ?€ */
+
 .log {
   font-size: 12px;
   color: #9aa4b2;
@@ -70,7 +70,7 @@ button.secondary:hover {
   border: 1px solid #232b3d;
 }
 
-/* QR ?€ */
+
 .qrBox {
   display: flex;
   justify-content: center;
@@ -78,3 +78,4 @@ button.secondary:hover {
   background: white;
   border-radius: 12px;
 }
+

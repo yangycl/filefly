@@ -15,20 +15,23 @@ function App() {
       {mode === "idle" && (
         <div className="card">
           <button onClick={() => setMode("send")}>
-            ?“¤ Send File
+            ðŸ“¤ Send File
           </button>
 
           <button
             className="secondary"
             onClick={() => setMode("receive")}
           >
-            ?“¥ Receive File
+            ðŸ“¥ Receive File
           </button>
         </div>
       )}
 
       {mode !== "idle" && (
-        <Transfer mode={mode} onExit={() => setMode("idle")} />
+        <Transfer
+          mode={mode}
+          onExit={() => setMode("idle")}
+        />
       )}
     </div>
   );
