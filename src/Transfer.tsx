@@ -451,10 +451,12 @@ export default function Transfer({
 
       {qr && (
 
-        <QRCodeCanvas
-          value={qr}
-          size={240}
-        />
+        <div className="qr-box">
+          <QRCodeCanvas
+            value={qr}
+            size={240}
+          />
+        </div>
 
       )}
 
