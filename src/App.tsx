@@ -9,7 +9,7 @@ function App() {
 
   return (
     <div className="container">
-      <div className="title">FileFly</div> <img src="icons/firefly-big.png" alt="" />
+      <div className="title">FileFly</div> <img src="/filefly/icons/firefly-big.png" alt=""/>
       <div className="subtitle">Fast local file transfer</div>
 
       {mode === "idle" && (
