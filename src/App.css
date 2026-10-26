@@ -25,6 +25,9 @@ footer { padding-top: 8px; }
 .qr-panel { display: flex; flex-direction: column; align-items: center; gap: 12px; margin: 18px 0; text-align: center; }
 .qr-panel p { color: #d6e0f5; line-height: 1.5; }
 .qr-panel canvas { max-width: 100%; height: auto; padding: 10px; border-radius: 12px; background: white; }
+.qr-navigation { display: flex; width: 100%; align-items: center; gap: 8px; }
+.qr-navigation button { flex: 1; margin-top: 0; }
+.qr-navigation span { color: #9eafcc; white-space: nowrap; font-size: 12px; }
 .reader { width: 100%; max-width: 360px; margin: 14px auto; overflow: hidden; border-radius: 12px; }
 .file-panel, .progress-panel { margin-top: 20px; padding-top: 18px; border-top: 1px solid #293654; }
 .file-panel label { display: block; margin-bottom: 10px; font-weight: 700; }
