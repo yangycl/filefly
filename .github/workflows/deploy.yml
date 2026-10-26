@@ -38,7 +38,7 @@ jobs:
           ls -la dist
           cat dist/index.html
 
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v4
         with:
           path: ./dist
           
