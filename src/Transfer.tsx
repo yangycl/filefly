@@ -36,7 +36,13 @@ export default function Transfer({ mode, onExit }: TransferProps) {
   const scanner = useRef<Html5Qrcode | null>(null);
   const chunks = useRef<BlobPart[]>([]);
   const receivedBytes = useRef(0);
+  const fileSizeRef = useRef(0);
+  const filenameRef = useRef("received-file");
+  const scanParts = useRef(new Map<string, { total: number; parts: Map<number, string> }>());
   const [qr, setQr] = useState("");
+  const [qrId, setQrId] = useState("");
+  const [qrPage, setQrPage] = useState(0);
+  const qrParts = qr ? (qr.match(/[\\s\\S]{1,700}/g) || [qr]) : [];
   const [connected, setConnected] = useState(false);
   const [scanning, setScanning] = useState(false);
   const [file, setFile] = useState<File | null>(null);
@@ -78,19 +84,21 @@ export default function Transfer({ mode, onExit }: TransferProps) {
           try {
             const meta = JSON.parse(event.data.slice(10));
             chunks.current = []; receivedBytes.current = 0;
-            setFilename(String(meta.name || "received-file"));
-            setFileSize(Number(meta.size) || 0); setProgress(0); setReadyToDownload(false);
+            filenameRef.current = String(meta.name || "received-file");
+            fileSizeRef.current = Number(meta.size) || 0;
+            setFilename(filenameRef.current);
+            setFileSize(fileSizeRef.current); setProgress(0); setReadyToDownload(false);
             setStatus("正在接收：" + String(meta.name || "檔案"));
           } catch { setError("無法讀取檔案資訊。"); }
         } else if (event.data === "FILE_DONE") {
-          setReadyToDownload(true); setProgress(100); setStatus("接收完成：" + filename);
+          setReadyToDownload(true); setProgress(100); setStatus("接收完成：" + filenameRef.current);
         } else if (event.data.startsWith("FILE_ERROR:")) setError(event.data.slice(11));
         return;
       }
       if (event.data instanceof ArrayBuffer || event.data instanceof Blob) {
         chunks.current.push(event.data);
         receivedBytes.current += event.data instanceof Blob ? event.data.size : event.data.byteLength;
-        setProgress(fileSize > 0 ? Math.min(99, Math.round(receivedBytes.current / fileSize * 100)) : 0);
+        setProgress(fileSizeRef.current > 0 ? Math.min(99, Math.round(receivedBytes.current / fileSizeRef.current * 100)) : 0);
       }
     };
   }
@@ -106,6 +114,7 @@ export default function Transfer({ mode, onExit }: TransferProps) {
       await peer.setLocalDescription(offer);
       await waitForIceGathering(peer);
       setQr(JSON.stringify(peer.localDescription));
+      setQrId(Math.random().toString(36).slice(2, 10)); setQrPage(0);
       setStatus("請讓接收端掃描此 Offer QR Code");
     } catch (e) { setError(e instanceof Error ? e.message : "建立配對資料失敗"); }
   }
@@ -123,6 +132,7 @@ export default function Transfer({ mode, onExit }: TransferProps) {
       await peer.setLocalDescription(answer);
       await waitForIceGathering(peer);
       setQr(JSON.stringify(peer.localDescription));
+      setQrId(Math.random().toString(36).slice(2, 10)); setQrPage(0);
       setStatus("請讓傳送端掃描此 Answer QR Code");
     } catch (e) { setError(e instanceof Error ? e.message : "讀取 Offer 失敗"); }
   }
@@ -147,12 +157,28 @@ export default function Transfer({ mode, onExit }: TransferProps) {
 
   async function scanQr(callback: (value: string) => Promise<void>) {
     setError(""); setStatus("請允許相機權限，並對準另一台裝置的 QR Code"); setScanning(true);
+    scanParts.current.clear();
     try {
       const reader = new Html5Qrcode("filefly-reader");
       scanner.current = reader;
       await reader.start({ facingMode: "environment" },
         { fps: 10, qrbox: { width: 250, height: 250 }, aspectRatio: 1 },
-        async (value) => { await stopScanner(); await callback(value); }, () => undefined);
+        async (value) => {
+          if (value.startsWith("FILEFLY1|")) {
+            const fields = value.split("|");
+            if (fields.length < 5) return;
+            const id = fields[1], index = Number(fields[2]), total = Number(fields[3]);
+            if (!Number.isInteger(index) || !Number.isInteger(total) || index < 1 || total < 1 || index > total) return;
+            let entry = scanParts.current.get(id);
+            if (!entry) { entry = { total, parts: new Map<number, string>() }; scanParts.current.set(id, entry); }
+            entry.parts.set(index, fields.slice(4).join("|"));
+            setStatus("已掃描配對資料 " + entry.parts.size + " / " + total + " 張 QR Code；請繼續掃描");
+            if (entry.parts.size < total) return;
+            const full = Array.from({ length: total }, (_, i) => entry?.parts.get(i + 1) || "").join("");
+            await stopScanner(); await callback(full); return;
+          }
+          await stopScanner(); await callback(value);
+        }, () => undefined);
     } catch (e) {
       await stopScanner();
       setError("無法啟動相機：" + (e instanceof Error ? e.message : String(e)) + "。請確認使用 HTTPS 並允許相機權限。");
@@ -194,7 +220,12 @@ export default function Transfer({ mode, onExit }: TransferProps) {
       {mode === "send" && !qr && !connected && <button onClick={createOffer}>建立配對 QR Code</button>}
       {qr && <div className="qr-panel">
         <p>{mode === "send" ? "步驟 1：讓接收端掃描此 Offer QR Code" : "請讓傳送端掃描此 Answer QR Code"}</p>
-        <QRCodeCanvas value={qr} size={280} level="L" marginSize={3} />
+        <QRCodeCanvas value={"FILEFLY1|" + qrId + "|" + (qrPage + 1) + "|" + qrParts.length + "|" + qrParts[qrPage]} size={280} level="L" marginSize={3} />
+        {qrParts.length > 1 && <div className="qr-navigation">
+          <button className="secondary" disabled={qrPage === 0} onClick={() => setQrPage(qrPage - 1)}>上一張</button>
+          <span>第 {qrPage + 1} / {qrParts.length} 張</span>
+          <button className="secondary" disabled={qrPage + 1 >= qrParts.length} onClick={() => setQrPage(qrPage + 1)}>下一張</button>
+        </div>}
         {mode === "send" && !connected && <button className="secondary" onClick={() => scanQr(acceptAnswer)}>步驟 2：掃描接收端 Answer QR Code</button>}
       </div>}
       {mode === "receive" && !connected && !qr && <button onClick={() => scanQr(createAnswer)}>掃描傳送端 Offer QR Code</button>}
