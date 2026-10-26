@@ -42,7 +42,7 @@ export default function Transfer({ mode, onExit }: TransferProps) {
   const [qr, setQr] = useState("");
   const [qrId, setQrId] = useState("");
   const [qrPage, setQrPage] = useState(0);
-  const qrParts = qr ? (qr.match(/[\\s\\S]{1,700}/g) || [qr]) : [];
+  const qrParts = qr ? (qr.match(/[\s\S]{1,700}/g) || [qr]) : [];
   const [connected, setConnected] = useState(false);
   const [scanning, setScanning] = useState(false);
   const [file, setFile] = useState<File | null>(null);
